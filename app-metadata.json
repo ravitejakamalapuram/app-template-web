@@ -1,0 +1,16 @@
+{
+  "appName": "TODO: App Name",
+  "appType": "web",
+  "repoName": "TODO: repo-name",
+  "description": "TODO: one-sentence description of what this app does.",
+  "modules": [
+    {
+      "name": "TODO: App Name (Web App)",
+      "type": "web",
+      "path": ".",
+      "status": "unpublished",
+      "pageUrl": "https://TODO-owner.github.io/TODO-repo-name/",
+      "buildScript": "npm run build"
+    }
+  ]
+}
