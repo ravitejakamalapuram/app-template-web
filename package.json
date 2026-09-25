@@ -1,0 +1,9 @@
+{
+  "name": "TODO-repo-name",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test": "echo \"TODO: add a real test command\" && exit 0",
+    "build": "mkdir -p dist && cp index.html dist/index.html"
+  }
+}

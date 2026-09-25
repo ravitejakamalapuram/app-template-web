@@ -1,0 +1,56 @@
+name: Deploy to GitHub Pages
+
+# ADR: decisions/0001-app-factory.md (company-brain, D4). Web ships through GitHub Pages
+# from the app's own repo and never enters release-platform: Pages needs no store
+# credential, so there is nothing for release-platform's keyless-publishing trust
+# boundary to protect here.
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  # Build and test gate the deploy: deploy-pages only runs if this job succeeds.
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - run: npm ci
+
+      # TODO: replace with this app's real test command.
+      - run: npm test
+
+      # TODO: replace with this app's real build command.
+      - run: npm run build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          # TODO: point at this app's actual build output directory.
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # id-token: write is GitHub's Pages OIDC only, scoped to this job alone (never at
+    # workflow level, never on a job that runs app build code) — see POR-105 discussion.
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
